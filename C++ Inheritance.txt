@@ -253,6 +253,83 @@ Object Oriented Progamming
 
 			- The ability of an object of a static type to have different behaviors according to its dynamic type
 
+		Polymorphism Use Case
+
+			- Inheritance + Pointers
+			- "Heterogeneous collection"
+
+			ex) Farm - A heterogenious collection of different but related animals
+
+				- By default C++ chooses a function by Static Type 	//What is literally written
+				- To use Dynamic Type qualify the function as virtual
+				- Virtual is inherited, all derived class functions with the same name will also become virtual
+				- A class with a pure virtual function cannot be instantiated // FarmAnimal Bob; is now illegal
+				- A class with a pure virtual function is called "Abstract"
+
+					Purpose of Pure Virtual Functions:
+
+						- Force derived classes to implement such function
+						ex) Fox class is not allowed, is forced to implement a speak function
+
+							Class Fox: public FarmAnimal 	//Refer to FarmAnimal class below
+							{
+							};
+
+				- A class that consists of only pure virtual functions is called an "Interface"
+				- Always make destructors virtual
+
+				//Static Code
+				class FarmAnimal
+				{
+					void speak() { cout << "..."; }
+				};
+
+						//Dynamic Code VIRTUAL keyword
+						class FarmAnimal	//Abstract class
+						{
+							virtual void speak() = 0;	//Pure Virtual Function
+						};
+
+				class Cow: public FarmAnimal
+				{
+					void speak()
+					{
+						cout << "Mooo";
+					}
+				};
+
+				class Pig: public FarmAnimal
+				{
+					void speak()
+					{
+						cout << "Oink!";
+					}
+				};
+
+				class Sheep: public FarmAnimal
+				{
+					void speak()
+					{
+						cout << "Bhaaa";
+					}
+				};
+
+				void main()
+				{
+					FarmAnimal* Farm[4];	//Creates array named Farm with 4 FarmAnimal pointers
+
+					Farm[0] = new Cow;
+					Farm[1] = new Pig;
+					Farm[2] = new Sheep;
+					Farm[3] = new Cow;
+
+					for(int k = 0; k < 4; k++)
+					{
+						Farm[k]->speak();
+					}
+					//Will output ... for all animals in Static case
+					//Will output each animal's sounds in Dynamic case
+				}
 	}
 
 }
