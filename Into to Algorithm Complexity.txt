@@ -1,0 +1,287 @@
+Into to Algorithm Complexity
+
+	- The analystical way of comparing algortihms 
+
+Emperical Testing:
+	- Select a collection of inputs (Benchmark)
+	- Time the algorithms/Programs for their outputs
+	- Controlled environment
+		- Same machine
+		- Same resources
+		- Same implementation languge
+		- Same compiler
+
+Analytical Testing:
+	- Represent algorithm performance by a mathematical object
+	- Use mathematics to compare such objects
+
+	The runtime Function:
+		- Given the size of the input, return the number of steps an algorithm will perform
+			Size: Which particular input of size n?
+				- The worst case input
+				- The average over all inputs of size n
+			Steps:
+				- Additions
+				- Multiplication
+				- Memory access
+
+			Ta(n) = 3n^2 + 6
+			Tb(n) = 1/20*n^3*2
+
+			Comparing Algorithms is comparing functions!
+
+			Plots can be misleading…
+				- function graph my be different as you zoom out
+				- Not interested in plots
+
+	ArrayList::swap(int i, int j)
+	{
+		T tmp;
+		tmp = data[i];		//2 operations
+		data[i] = data[j];	//3 operations	= 7 operations
+		data[j] = tmp;		//2 operations
+		return;
+	}
+
+	foo (int n, int k)
+	{
+		int x;
+		if (n == 0)			//1
+		{
+			x = 1;			//1
+		}								//if: 1 + 1 = 2
+		else							//else: 1 + 4 = 5 -> T(n) = 5
+		{
+			x = k * k;		//2
+			k = x / n;		//2
+		}
+	}
+
+		- Anaylze each side of the if statement separately
+		- Prefer the worst case (so pick else statement)
+
+	bool ArrayList::search (const T& x)
+	{										//T(n) = 4n + 1
+		for (int k = 0; k < m_size; k++)	//1 + ∑(1 + 2 + 1) = 4n + 1	//summation -> Sum from k = 0 to n - 1
+		{
+			if (m_data[k] == x)				//2
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	sumsqrm(int** a, int n)
+	{
+		int s = 0;
+		for (int k = 0; k < n; k++)				//1 + ∑(1 + 6n + 1 + 1) => 1 + 6n^2 + 3n
+		{
+			for (int j = 0; j < n; j++)			//1 + ∑(1+4+1) from j = 0 to n - 1 => 6n + 1
+			{
+				s = s + a[k][j];				//4
+			}
+		}
+		return s;
+	}
+
+	// Total runtime function: T(n) = 6n^2 + 3n + 2
+
+While Loops:
+
+	bool LinkedList::find(const T&x)	//Total: 6n + 1 = T(n)
+	{
+		Node* rp = m_head;
+		while (rp->m_next != NULL)		//2  		while loop = n(2 + 2 + 2) = 6n
+		{
+			if (rp->m_data == x)		//2
+			{
+			return true;
+			}
+
+			rp = rp->m_next;			//2
+		}
+
+		return false;
+	}
+
+	n = size of linked list
+
+Functions with logarithmns
+
+	Suppose: Array is sorted incrementally, smallest to biggest
+
+	1) Start in middle, search bottom half or top half depending on variable you're looking for
+	2) Keep splitting array in half until you find element or can't partition anymore
+
+	aka binary search
+
+							size   element to search
+							 v       v
+	bool binSearch(int A[], int n, int x)
+	{
+		int low = 0;																			//1
+		int high = n - 1;																		//2
+
+		while(low <= high)																		//1
+		{
+			int mid = low + (high - low) / 2;	//Get index in the middle						//4 = + - /
+
+			if (A[mid] == x)																	//2 [] and ==
+			{
+				return true;
+			}
+			else if (A[mid] < x)																//2 				//Inerloop = 6 + 4 + 1 = 11
+			{
+				low = mid + 1;																	//2
+			}
+			else								//A[mid] > x
+			{
+				high = mid - 1;																	//2
+			}
+		}
+		return false;
+	}
+
+	T(n) = 11 * log_2(n) + 3 		//Log base 2
+
+The RunTime Function:
+
+	- Represent the performance of a program as a mathematical object
+	- Performance is comapred by comparing functions
+	- Functions are compared by their rate of growth
+		- Big O notation (rate of growth)
+		- Donald Knuth
+	Big O:
+		- Given functions f(x) and g(x), we say that f(x) is O(g(x)) if their exists constants c and n0 such that for every n > n0
+			f(n) ≤ c * g(n)
+		- Interpretation:
+			f(x) is O(g(x)) means that, ignoring constant factors, the rate of growth of g(x) is greater than or equal to the rate of growth of f(x)
+
+			Note: ignoring constant factors
+
+			Ex) n^2 is O(3n^2+n)
+
+			Proof:
+
+				Let c = 1 and n0 = 1
+				n^2 ≤ 3n^2 + n for any n > 1
+
+			Ex 2) 3n^2+n is O(n^2)
+
+			Proof:
+
+				C = 4 and n0 = 1
+				3n^2+n ≤ 4(n^2)
+				3n^2+n ≤ n^2 + n^2 + n^2 + n^2
+				3n^2+n ≤ 3n^2 + n^2
+				n ≤ n^2
+
+		Definition:
+				if 	f(x) is O(g(x)) AND g(x) is O(f(x))
+				then
+				f(x) is Θ(g(x)) AND g(x) is Θ(f(x))
+
+				Then they have the same rate of growth
+
+The Compelexity Hierarchy:
+
+	n!
+	2^n
+	.
+	.
+	.
+	n^4
+	n^3
+	n^2
+	n * log2(n)	//log base 2
+	n
+	log2(n)
+	1 			//All constants
+
+	ex)
+		Ta = 3n^2 + 6
+		Tb = 1/20 * n^3 + 2 is O(n^2)		//Has higher rate of growth
+
+		use big O with tightest upper bound
+
+Some basic rules:
+
+	If T1 is O(f(n)) AND T2 is O(g(n))
+
+	THEN:
+
+	1) T1(n) + T2(n) is O(f(n) + g(n))
+	2) T1(n) * T2(n) is O(f(n) * g(n))
+	3) T1(n) + T2(n) is O(max(f(n), g(n)))
+	4) A polynomial of degree k is O(n^k)
+
+Searching a sorted array:
+
+	Binary Search:
+
+		//Code written earlier ^
+
+		T = 11 * log(n) + 3 is O(log(n))
+
+	Linear Search: 							//Search each element individually from index 0 to max
+
+	bool linearSearch(A[], n, x)
+	{
+		for (k = 0; k < n; k++)
+		{
+			if (A[k] == x)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+		T = 4n + 1 is O(n)
+
+		Number of operations
+
+	n 		11log(n)+3 		4n+1
+	-----------------------------
+	10		|	40		|	41
+	1,800	|	112		|	4001
+	10^9	|	332		|	4,000,000,001
+
+THE TYRANNY OF GROWTH:
+
+	Moore's Law:	Computer double in power in 18 months
+
+	Wirth's Law:	Software becomes slower faster than hardware becomes faster
+
+					100 ops/sec 			1,000 ops/sec
+					6,000 op/min 	10x 	60,000 ops/min
+		Programs	PC1				PC100
+		-----------------------------------------
+		125n	|	48			|	480			|	~10x
+		12n^2 	|	22			|	70			|	~3x
+		1/3n^3 	|	26			|	56			|	~2x
+		2^n 	|	12 			|	15 			|	~1.2x
+		n!		|	7 			|	8 			|
+
+		values of n that pc can solve in 1 minute
+
+Algorithm Complexity + Data Structures
+{
+					|	ArrayList	|	LinkedList	|	LinkedList with pointer to the back
+					--------------------------------------------------------
+	get()			|		1 		|		n 		|		n
+	insert()		|		n 		|		1 		| 		1
+	remove()		|		n 		|		1 		| 		1
+	insert_front()	|		n 		|		1 		| 		1
+	insert_back()	| 	(n)	1 avg 	|		n 		|		1		//n or 1 depending if you have to increase size of ArrayList
+	find()			| 		n 		|		n 		| 		n
+
+	- For random access, ArrayList.
+
+	- For insertions in front/back and not middle, LinkedList
+}
+
+
+
+

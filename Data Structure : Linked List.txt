@@ -1,0 +1,243 @@
+Data Structure / Linked List
+
+ex) List <a, e, f, c, d>
+
+Memory Diagram
+
+	Class Linked List
+[			]																Sentinel
+[	head[.]	] -> [a | . ] -> [e | . ] -> [f | . ] -> [c | . ] -> [d | . ] -> [? | .]
+[	size[5]	]
+[			]
+
+template <typename T>
+
+class Node
+{
+	T m_data;
+	Node* m_next;
+};
+
+template <typename T>
+
+class LinkedList
+{
+	Node* m_head;
+	int m_size;
+}
+
+We shall use pointers to Nodes instead of integers to represents positions.
+
+Constructor:
+
+	LinkedList()
+	{
+		m_size = 0;
+		m_head = new Node; //Points to Sentinel Node //Refer to line 9
+		m_head->m_next = NULL;
+	}
+
+Insert Function:
+
+	insertFront(T& x)
+	{
+		Node* tmp = new Node;
+		tmp->m_data = x;
+		tmp->m_next = m_head;
+		m_head = tmp;
+		m_size++;
+		tmp = NULL;
+	}
+
+Remove Function:
+
+ex) <e, b, c, a, d> -> <e, b, a, d>
+
+1) Point tmp to next node (node that p->next points to)
+
+2) copy from tmp to p
+
+3) delete tmp
+
+4) decrement size
+
+void remove (Node* p)
+{
+	Node* tmp = p->m_next;
+	p->m_data = tmp->m_data;	//Copy data of tmp to p
+	p->m_next = tmp->m_next;	//Copy pointer of tmp to p
+	delete tmp;
+	m_size--;
+}
+
+Get Function:
+
+	Node* getPtr(int i)	//Returns pointer to node i
+	{
+		if (0 <= i && i <= m_size)
+		{
+			Node* rp = m_head; //Running pointer
+
+			for (int k = 0; k < i; k++)
+			{
+				rp = rp->m_next;
+			}
+
+			return rp;
+		}
+	}
+
+Insert Function:
+		   p
+		   v
+ex) <c, e, a, b, d> -> <c, e, x, a, b, d>
+
+1) Create new node
+
+2) Copy contents of p to contents of new node //p is pointer that points to position you want to insert
+
+3) Change next of p to new node
+
+4) insert x
+
+Insert(Node*p, T& x)
+{
+	Node* tmp = new Node; //Create pointer that points to new node
+	tmp->m_data = p->m_data;
+	tmp->m_next = p->m_next;
+	p->m_next = temp;
+	p->m_data = x;
+	m_size++;
+	tmp = NULL;
+}
+
+Search Function:
+
+Traverse the list, via the running pointer
+
+bool Search(T& x)
+{
+	Node* rp = m_head;
+	while(rp->m_data != x && rp->next != NULL) //Maybe switch conditions
+	{
+		rp = rp->m_next;
+	}
+	if (rp->m_next != NULL)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+Destructor function:
+
+1) Make tmp = m_head
+
+2) advance m_head
+
+3) delete tmp
+
+4) stop when m_head or tmp is NULL
+
+~LinkedList() //Overload the Destructor
+{
+	Node* tmp;
+	while(m_head != NULL)
+	{
+		tmp = m_head;
+		m_head = tmp->next;
+		delete tmp;
+	}
+}
+
+Finished Class: //Combine all functions and constructor
+
+Other Functions:
+
+	//Can implement these additional functions with existing functions
+
+	- insertFirst(x)	->	insert(getPtr(0), x)
+	- removeFirst()	->	remove(getPtr(0))
+	- insertLast(x)	->	insert(getPtr(size()), x)
+	- removeLast()	->	remove(getPtr(size() - 1))
+
+Other Improvements to Linked List:
+
+	- Overload "<<"
+	- Add safety and error handling
+	- Implement more functions
+		- reverse()
+		- sort()
+		- concatenate()
+
+	The iterator:
+
+		Wrap the position pointer inside its own class
+
+		[			]																Sentinel
+		[	head[.]	] -> [e | . ] -> [f | . ] -> [a | . ] -> [c | . ] -> [b | . ] -> [? | .]
+		[	size[5]	]
+		[			]
+												  ^
+												  |		//Raw pointer, not object like rest of the linked list
+												p[ ]	//To fix, wrap pointer in class called the iterator
+
+		class LinkedListIterator
+		{
+			Node* p;
+		}
+
+Linked List Variants:
+
+	Linked List but with tail pointer that points to sentinel.
+
+	Circular linked list: sentinel points back to first element.
+
+	The Doubly LinkedList: Nodes have two pointers, one points forward and one points backwards.
+
+		class Node
+		{
+			T m_data;
+			Node* m_next;
+			Node* m_prev;
+
+			//Insert Algorithm
+			1) Create new Node
+			2) Chain new node
+			3) Change prev/next
+			4) Change next's prev
+
+			insert (Node* p, x)
+			{
+				Node* tmp = new Node;
+				temp->m_data = x;
+				tmp->m_next = p;
+				tmp->m_prev = p->m_prev;
+				tmp->m_prev->m_next = tmp;
+				tmp->m_next->m_prev = tmp;
+
+				size++;
+			}
+
+			//Remove Algorithm
+			remove (Node* p)
+			{
+				p->m_prev->m_next = p->m_next;
+				p->m_next->m_prev = p->m_prev;
+				delete p;
+				p = NULL;
+			}
+		}
+
+//Homework 1 tips
+
+./a.out < sampleinput.txt // < file.txt
+
+input redirection, reads input txt as though it were from keyboard
+
+./a.out < sampleinput.txt > out.txt //reads from file and writes to file, shell is doing all the work
+
+valgrind a.out // program that checks for memory leaks

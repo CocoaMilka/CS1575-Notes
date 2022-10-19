@@ -1,0 +1,3 @@
+non const pointers cannot point to const var
+const pointers can point to non const var
+

@@ -1,0 +1,16 @@
+Abstract data types & data structures 
+
+Dealing with data that consists of collections of objects:
+- Sets
+- Sequences
+- Functions
+- Propositions
+- Relationships
+- Graphs
+
+Abstract data type
+a mathematical object together with operations on that object(s)
+
+	Integers + - * / 
+
+

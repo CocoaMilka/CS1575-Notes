@@ -1,0 +1,142 @@
+Data Structure: ArrayList
+	Objective:
+
+		ex) <e, a, f, g, c>
+
+		Create class with these functions
+
+		- size()
+		- get()
+		- set()
+		- insert()
+		- remove()
+
+	Creating Data Structure:
+
+		1) Visualize memory
+
+				Memory:
+			------------------
+		Class			Storage Array
+		[ m_data[] ] ->	[e][a][f][g][c][?][?][?]
+		[ m_size[] ]
+		[ m_max[]  ]
+		3 Member variables
+
+		2) Create Class
+
+		template<typeName T>
+
+		class ArrayList
+		{
+			T* m_data;
+			int m_size;
+			int m_max;
+
+			ArrayList()	//default constructor
+			{
+				m_max = 8;
+				m_size = 0;
+				m_data = new T[m_max];
+			}
+
+			/*
+				Resize Algorithm
+				1) Create a new array
+				2) Copy data from old array to new array
+			*/
+
+			/*
+				Insert Algorithm
+				1) shift elements to right after position i
+					- Does not work if array is full
+				2) start by shifting last element
+				3) insert x
+			*/
+
+			void insert(int i, T& x)
+			{
+				if (0 <= i && i <= m_size)
+				{
+					if (m_size == m_max)
+					{
+						resize(m_max * 2); //Double size of array REFER to line 76
+					}
+
+					for (int k = m_size; k > i; k--)
+					{
+						m_data[k] = m_data[k - 1];
+					}
+
+					m_data[i] = x;
+					m_size++; //Maintain size
+				}
+			}
+
+			void resize(int new_max)
+			{
+				T* tmp = new T[new_max]; //Creates pointer that points to a new array of double size
+				for(int k = 0; k < m_max; k++)
+				{
+					temp[k] = m_data[k];
+
+					delete [] m_data; //Frees original array pointed by m_data
+					m_data = tmp;
+					tmp = NULL;
+
+					m_max = new_max;
+				}
+			}
+
+			int size() const //const because it doesn't modify the class
+			{
+				return m_size;
+			}
+
+			const T& get(int i) const //returns reference to T[i] in type T array
+			{
+				if(0 <= i && i < m_size)
+				{
+					return m_data[i]; //Pointers to arrays dereference automatically
+				}
+				else
+				{
+					cerr << "Error" << endl; //cin cout cerr
+				}
+			}
+
+			void set(int i, T& x)
+			{
+				if(0 <= i && i < m_size)
+				{
+					m_data[i] = x;
+				}
+			}
+
+			//Remove Algorithm
+			*/
+				PRE: 0 <= i <= size
+				1) Remove i
+				2) Shift everything after i to the left
+				3) Decrement i
+
+			*/
+
+			void remove(int i)
+			{
+				if (0 <= i && i < m_size)
+				{
+					if (m_max > 8 && m_size < (m_max / 4))
+					{
+						resize(m_max / 2); //Resize array if array is less than quarter full
+					}
+
+					for (int k = i; k < m_size - 1; k++)
+					{
+						m_data[k] = m_data[k + 1];
+					}
+
+					m_size--;
+				}
+			}
+		}

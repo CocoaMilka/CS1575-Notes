@@ -1,0 +1,99 @@
+Class pointers:
+
+//To declare class pointer
+	className *pointerName;
+	pointerName = new className;
+
+//Dereferences a pointer to a class
+arrow operator: ->
+
+	pointerName->classAttribute = value;
+
+	*pointerName.classAttribute = value; //ERROR
+	(*pointerName).classAttribute = value; //Works due to forced operator precedence
+
+	(*pointerName).classAttribute = value;	≡	pointerName->classAttribute = value;
+
+//Example class
+
+	class Student
+	{
+		int age;
+
+		void setAge(int x)
+		{
+			age = x;
+		}
+	};
+
+	Student *p;			//creates a pointer p
+	p = new Student;	//creates a new student that p points to
+	p->setAge(43);		//pointer p accesses setAge function from class Student
+
+	setAge() has a hidden paramter "this":
+
+	void setAge(Student *this, int x);	//Member function of a class always has an extra
+										//parameter which is a pointer to itself
+
+//The "this" pointer
+	- Parameter to member functions
+	- points to the calling object
+
+//Only member functions get the "this" pointer
+
+	void setAge(Student *this, int x)
+	{
+		age = x;
+		this->age = x;
+	}
+
+//Classes with pointers
+
+class Frog
+{
+	int *p;
+
+	Frog(int x)
+	{
+		p = new int;	//new keyword allocates space in memory that pointer points to
+		*p = x;
+	}
+};
+
+Frog jeremy(5);	//5 is stored outside of jeremy, pointer to 5 is in jeremy
+Frog mike(7);
+
+//The big 3
+
+- destructor
+- copy constructor
+- operator equals
+
+Destructor is called when a variable finishes its life.
+	ex: when it leaves its scope {}
+
+Copy Constructor is called when declaration without initialization
+	ex: Frog bob(Fred);
+	Frog bob = Fred;
+
+	ex: when objects are passed as parameters by value
+
+		void deepFry(Frog x)
+		{
+			. . .
+		}
+
+		deepFry(bob);
+
+		deepFry(&bob); //Pass by reference to directly modify bob and avoid copy constructor
+
+Operator equals is called when setting one class instance to another
+	ex: jeremy = mike;
+
+
+
+
+
+
+
+

@@ -1,0 +1,74 @@
+Abstract data types & data structures 
+
+	Dealing with data that consists of collections of objects:
+	- Sets
+	- Sequences
+	- Functions
+	- Propositions
+	- Relationships
+	- Graphs
+
+Abstract data type
+
+	a mathematical object together with operations on that object(s)
+
+		Integers + - * /
+
+	Data Structure
+	- A particular implementation of an abstract data type
+
+	ex: int, long
+
+	There exists more than one data structure for the same abstract data type
+	- Data structures have limitations
+
+	Each data structure has costs and benefits
+
+Data Structures in C++
+
+	Data Structures -> 	class
+	Data 			->	member variables
+	Operations 		-> 	member functions
+
+Problem Design Process
+
+	- Analyze problem and represent it mathematically
+	- Develop a high level alogrithm
+		* Determine data-organization and operations required
+			ex: insert and remove itmes,
+				searching for items,
+				accessing items
+	- Refine the algorithm
+		* Selecting the appropiate data structure
+	- Implement
+	- Profit!!!
+
+												//Day 2//
+
+
+The "List" Abstract data type
+
+	- Sequence of elements of the same type <a1, a2, a3, ..., a_n>
+		a_i: elements of the list.
+		n + 1: size of the list.
+		Empty list: list with no elements <>
+
+	- Elements are ordered
+		Every element has a successor (except a_n)
+		Every element has a predecessor (except a_0)
+
+	- Operations
+		f(x): -> z
+
+		//Returns new lists (sometimes)
+		size(L): Returns size of L
+		get(L, i): get element at position i 					0 <= i < size(L)
+		set(L, x, i): replace element at position i with x
+		insert(L, x, i): insert x at position i
+		remove(L, i): remove element at position i
+		append(L, x): insert(L, x, size(L))
+
+	- Can define complex operations algorithmically
+
+
+

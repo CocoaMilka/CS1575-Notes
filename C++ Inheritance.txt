@@ -1,0 +1,268 @@
+C++ Inheritance
+
+Object Oriented Progamming
+{
+	OOP:
+		- Objects: data + functions on the data
+
+	- Late '60s
+		- Programming language named Simula, first to explore OOP
+		- '70s SmallTalk programming language by Alan Kay
+
+	- The 3 Pillars of OOP:
+		- Encapsulation: Objects can hide its members	public/private
+		- Inheritance: The ability to declare a class as an extention of another class
+		- Polymorphism:
+
+	Inheritance
+	{
+		class Dog
+		{
+			int x;
+
+			public:
+
+			int y;
+			void bark();
+		};
+
+		class Pug : public Dog
+		{
+			public:
+
+			int z;
+			void snore();
+		};
+
+		Dog toto;
+		Pug fido;
+
+		- A derived class "inherits" all member variables and member functions from its base class
+			except: constructors, destructor, operator=
+
+		- Derived class is considered of the same type as the bass class
+
+		- The base class is not considred the same type as the dervied class
+
+			void myFunction(Dog &d)
+			{
+			}
+
+			myFunction(fido);	//fido can be passed through functions that expect type Dog even though fido is type Pug
+
+			Dog *p = &fido;		//Dog pointer can also point to Pug
+			toto = fido;		//Dog can be set equal to Pug
+			Dog larry(fido);	//Dog can be constructed from Pug
+
+			fido = toto			//Pug can not be set equal to Dog b/c Pug is extention of Dog and has member variables that Dog doesn't have
+
+		- Member Re-Definition
+			- A derived class can members with the same name as inherited members	//idk what this means
+			- Can derive derived class
+
+			class Brindle : public Pug
+			{
+				int w;
+				public:
+
+				void bark();	// Its own bark function, separate from Dog bark function, however it has both functions
+			}
+
+			Brindle odin;
+
+			odin.bark()
+			odin.Dog::bark()	//Used to differentiate between different functions with the same name, only needed if derived class uses has function with same name as parent class
+
+				Dog						Pug extended from Dog		Brindle extended from Pug
+				toto					fido						odin
+			_________________		_________________			_________________
+			|	x 	[] 		|		|	x 	[]		|			|	x 	[] 		|
+			|	y 	[] 		|		|	y 	[]		|			|	y 	[] 		|
+			|---------------|		| 	z 	[]		|			|	z 	[]		|
+			|	bark();		|		|---------------|			|	w 	[]		|
+			|_______________|		|	bark();		|			|---------------|
+									|	snore();	|			|	bark();		|
+									|_______________|			|	snore();	|
+																|	bark();		|
+																|_______________|
+		}
+
+			Encapsulation + Inheritance
+				public: Everyone can access
+				private: Only objects of the exact same class can access 	//Even though x is inhereited from Dog and Pug has it, Pug cannot use it
+				protected: Only objects of the exact same class and derived classes can accesss
+
+			class Dog
+			{
+				protected:	//Class rewritten to allow derived classes to access x
+				int x;
+				public:
+				int y;
+				bark();
+			};
+
+			C++ has 3 different types of inheritance
+				- public
+				- protected
+				- private
+
+				ex)
+
+				class B: protected A
+				{
+				...	//All pubic members will be protected in derived class
+				}
+
+				class C: private A
+				{
+				...	//All members regardless of access type will be private in derived class: public -> private; protected -> private; private -> private
+				}
+
+			- Single inheritance 	//Most languages only have one parent class
+			- Multiple inheritance	//C++ can have multiple parent classes
+
+				ex)
+					class HomerMobile: public Car, public Boat, public Rocket
+					{
+					...
+					};
+
+			class Alpha
+			{
+				int x, y;
+				Alpha(): x(0), y(0) {}
+				Alpha(int a, int b): x(a), y(b) {}		//Assigns parameter a to x, and b to y epic shorthand
+			};
+
+			class Beta: public Alpha
+			{
+				int z;
+				Beta(): Alpha(1, 1), z(1) {}	//Calling parameterized constructor for Alpha in constructor for Beta
+				Beta(int i): z(i) {}			//Calls default Alpha constructor because type isn't specified
+			};
+
+			class Gamma: public Beta
+			{
+				int w;
+				Gamma(): w(0) {}
+				Gamma(int i): Beta(i), w(i) {}
+			};
+
+			Gamma tim;
+			_________________
+			|	int x 	[1]	|
+			|	int y 	[1]	|
+			|	int z 	[1]	|	//Memory diagram for tim based on above classes
+			|	int w 	[0]	|
+			|_______________|
+
+			Gamma carl(4);
+			_________________
+			|	int x 	[0]	|
+			|	int y 	[0]	|
+			|	int z 	[4]	|	//Memory diagram for carl based on above classes
+			|	int w 	[4]	|
+			|_______________|
+
+			//Templates need type specified to make a derived class
+
+			ex) class B : public A<int>		//B derived from A of type int, if you use T then derived class will be a template
+
+
+	Destructors under inheritance
+	{
+		- The destructor of a derived class calls the destructor of the base class automatically after its body
+
+		class Alpha
+		{
+			int p*;
+			.
+			.
+			.
+			~Alpha()	//Destructor needs to remove dynamically allocated member
+			{
+				delete p;
+			}
+		}
+
+		class Beta: public Alpha
+		{
+			char *s;	//Array of char pointers
+			.
+			.
+			.
+			~Beta()
+			{
+				delete[] s;
+			}
+		}
+
+		class Gamma: public Beta
+		{
+			Dog* my_dog;
+			.
+			.
+			.
+			~Gamma()
+			{
+				delete my_dog;
+			}
+		}
+
+		Gamma Bethany;
+		_____________
+		|	p[.]	|	-> []
+		|	s[.]	|	-> [][][][][]
+		|	Dog[.]	|	-> Dog
+		|___________|
+
+		Destruction Time:
+		//First calls Gamma destructor
+			- what Dog points to is deleted
+		//Gamma automatically calls Beta destructor after Gamma Destructor (because inherited)
+			- what s points to is delted
+		//Beta automatically calls Alpha destructor after Beta destructor
+			- what p points to is deleted
+		//Destructors are chained!! Each destructor should only handle what each class adds/whatever is unique to it****
+
+		If you try to delete inherited members from derived class in destructor, can cause issues. Will delete twice from both class destructors
+
+	}
+
+	Polymorphism
+	{
+		Polymorphism: "Many shapes"
+
+			- Work with different objects of different types as if they were of the same type
+
+			- These objects should have the same base class
+
+			- (The intersection between inheritance and pointers)
+
+		Dynamic vs. Static Type 	//Using classes from section Destructors under inheritance (line 172 or something)
+
+			Alpha* p;
+			p = new Beta;	//Works because an object of a dervied class is compatible with the type of base class
+
+			- What is the type of the object pointed by p?
+
+				- Static type = Alpha	//Pointer to p is of type Alpha; Alpha pointer 	 		//Static means "by the text, what code explicity says"
+				- Dynamic type = Beta 	//Object being created via 'new' is of type Beta 		//Dynamic means "by the execution, what actually happens when executed"
+
+		Polymorphism in C++
+
+			- The ability of an object of a static type to have different behaviors according to its dynamic type
+
+	}
+
+}
+
+Homework 2 deets
+
+header file is given, create body function definitions
+
+Normal class: className.h -> className.cpp
+.cpp includes .h
+
+Templated class: className.h -> className.hpp	//USE THIS FOR HOMEWORK
+.h includes the .hpp file						//Don't need to include in .hpp

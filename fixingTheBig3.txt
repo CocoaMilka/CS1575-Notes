@@ -1,0 +1,90 @@
+//Fix destructor to prevent memory leaks
+
+	//Example class
+
+	class Frog
+	{
+		int *p;
+		Frog(int x);
+		{
+			p = new int;
+			*p = x;
+		}
+	};
+
+	//Destructor
+
+	~Frog()
+	{
+		delete p; //Deallocates memory p points to (doesn't delete p)
+	}
+
+	//Scope bob lives in
+	{
+		Frog bob(5);
+			.
+			.
+			.
+	}	//Destructor automatically called at end of scope
+
+//Shallow Copy to Deep Copy
+
+	//Use same frog class from previous
+
+	//Scope bob and cindy lives in
+	{
+		Frog bob(5);
+		Frog cindy(7);
+
+		bob = cindy;
+			.
+			.
+			.
+		john = kermit = bob = cindy; //chaining
+			.
+			.
+
+	}	//Destructor automatically called at end of scope
+
+	//Operator Equal
+	**rhs = right hand side
+
+	const Frog& operator= (const Frog& rhs)
+	{
+		//alias test to prevent self assigning
+		if (this != &rhs)	//if this not equal to address of right hand side
+		{
+			*p = *(rhs.p);
+
+			*(this->p) = *(rhs.p); //functions same as previous line
+		}
+		return *this;
+	}
+
+	//This makes *p of each frog instance equal but doens't make p equal, avoids p of each frog
+	//pointing to the same address, ie tying them together
+
+//Fix copy constructor
+
+	//using same Frog class
+
+	{
+		Frog bob(5);
+		Frog cindy(7);
+		Frog ralf(bob);
+			.
+			.
+			.
+	}
+
+	//Copy constructor
+
+	Frog(const Frog& rhs)
+	{
+		*this = rhs;	//dangling pointer, new frog doesn't have new int **don't do this
+
+		(dangling pointer is when pointer is pointing to unknown place in memory)
+
+		p = new int;	//Do this, initialize pointer first
+		*this = rhs;	//Call operator=
+	}
