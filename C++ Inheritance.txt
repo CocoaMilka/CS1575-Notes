@@ -332,6 +332,67 @@ Object Oriented Progamming
 				}
 	}
 
+	Make Destructors Virtual
+	{
+		ex)
+			class FarmAnimal ...
+			class Cow: public FarmAnimal
+			class Pig: public FarmAnimal
+			class Sheep: public FarmAnimal
+
+			class Chicken: public FarmAnimal
+			{
+				Egg *eggs; //Egg pointer to egg class
+
+				Chicken()
+				{
+					eggs = new Egg[4];
+				}
+
+				~Chicken()
+				{
+					delete[] eggs;
+				}
+			}
+
+			exampleScope {
+				FarmAnimal* Farm[4];
+				Farm[0] = new Cow;
+				Farm[1] = new Chicken;
+				Farm[2] = new Pig;
+
+				for ( k = 0; k < 4; k++)
+				{
+					delete Farm[k];	//Calls the destructor of each item in array, static calls each item as FarmAnimal instead of their derived type !!!EGGS NOT DELETED!!!
+									//To fix, declare base destructor as virtual: virtual ~FarmAnimal(){}
+				}
+			}
+	}
+
+	Dynamic Cast - Used with pointers and inheritance
+	{
+		ex)
+			class Alpha()
+			{
+				.
+				.
+				.
+			}
+
+			class Beta(): public Alpha
+			{
+				.
+				.
+				.
+			}
+
+			Alpha* p = new Beta;
+
+			Beta* q = p;	//Fails b/c what p points to is statically an Alpha, but dynamically a Beta; so dynamically cast
+
+			Beta* q = dynamic.cast<Beta>(p);	//Returns null if casting fails
+	}
+
 }
 
 Homework 2 deets

@@ -1,0 +1,143 @@
+Data Structure / Stack
+
+also know as FiLo list	//First in Last Out
+
+Stack
+{
+
+	- A stack is a sequence of elements of the sme type
+
+		- ex) S1 = <a, r, p, l, s>
+		- We designate one side as the top
+
+	Operations
+	{
+		//Operations based on example stack above
+		- top(s1) = j
+		- push(s1, x) = <a, r, p, l, j, x>
+		- pop(s1) = <a, r, p, l>
+	}
+
+	Example Application
+	{
+		ex 1) opening and closing brackets
+
+		read input symbol by symbol 'c'
+			if 'c' is an opening symbol
+				push into stack
+			if 'c' is closing symbol
+				compare 'c' to top of stack
+				if matching
+					pop stack
+				else
+					error()!
+		if stack is empty
+			Success!!!
+
+		ex 2) The call stack
+
+				Call
+				Stack	//For program below, stores local variables and instruction locations
+			|	 	|
+			|	r 	|
+			|	p 	|
+			|	2 	|
+			|	x 	|
+			|	y 	|
+			|	1 	|
+			|	a 	|
+			|	b 	|
+			|_______|
+
+			foo()
+			{
+				x, y
+				.
+				.
+				.
+				bar()	//2
+				.
+				.
+				.
+			}
+
+			bar()
+			{
+				p, r
+				.
+				.
+				.
+			}
+
+			main()
+			{
+				a, b
+				.
+				.
+				.
+				foo()	//1
+				.
+				.
+				.
+				foo()
+				.
+				.
+				.
+				bar()
+				.
+				.
+				.
+			}
+	}
+
+	Data Structure: Array Stack
+	{
+		_____________
+		|	data	|
+		|	[.]		| -> [a][r][p][l][j][][][]
+		|	size	|
+		|	[5]		|
+		|	max		|
+		|	[8]		|
+		|___________|
+
+		Array Stack functions from ArrayList functions
+
+		top = last
+			return data[size - 1]
+
+		push = insert_back
+			m_data[size] = x
+			m_size--
+
+		pop = remove_back
+			m_size--
+	}
+
+	Data Structure: Linked Stack
+	{
+		//Using same stack data from previous structure
+		//REVERSE LIST
+		_____________
+		|	data	|
+		|	[.]		| -> [j|.] -> [l|.] -> [p|.] -> [r|.] -> [a|.]
+		|	size	|
+		|	[5]		|
+		|___________|
+
+		top = first
+			return m_head->m_data;
+
+		push = insert_front
+			tmp = new Node;
+			tmp->m_next = m_head;
+			tmp->m_data = x;
+			m_head = tmp;
+
+		pop = remove front
+			tmp = m_head->m_next;
+			delete m_head;
+			m_head = tmp;
+	}
+
+}
