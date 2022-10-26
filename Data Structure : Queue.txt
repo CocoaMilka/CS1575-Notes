@@ -1,0 +1,88 @@
+Data Structure / Queue
+
+- A queue is a sequence of elements of the same type
+	ex) q1 = <a, c, e, f, h>
+
+	front				back
+
+- One side is designated as the front, other as back
+
+- aka FiFo	first in first out
+
+Queue
+{
+	Operations:
+
+		- front(q1) = 'a'	//Returns element at front
+
+		- enqueue(q1, x) = <a, c, e, f, h, x>	//adds element to back
+
+		- dequeue(q1) = <c, e, f, h>	//removes element at front
+
+	D.S. ArrayQueue
+	{
+		_____________
+		|	data	|
+		|	[.]		| -> [a][c][e][f][h][][][]
+		|	size	|
+		|	[5]		|
+		|	max		|
+		|	[8]		|
+		|	front 	|
+		|	[0] 	|
+		|	back	|
+		|	[5]		|
+		|___________|
+
+		create pointers to front and back
+
+		- Circular array, when queue "back" pointer reaches end of array, point "back" to front of array
+
+			- When front and back pointers meet, then array is full
+
+		**They don't actually have to be pointers O: can just be indexes
+
+		- Front
+			return data[front]
+
+		- Enqueue
+			data[back] = x
+			back = (back + 1) % max	//Check when back needs to wrap around from end to beginning
+
+			if back catches up to front	//back + 1 = front
+				resize()
+
+		- Dequeue
+			front = (front + 1) % max
+	}
+
+	D.S. Linked Queue
+	{
+		_____________
+		|	back	|
+		|	[.]		| -> points to back 		[j|.] -> [l|.] -> [p|.] -> [r|.] -> [a|.] -> points to front
+		|	size	|
+		|	[5]		|
+		|___________|
+
+		Use "Circular LinkedList"
+
+		- Front
+			return m_back->m_next->m_data;
+
+		- Enqueue
+			Node* tmp = new Node;
+			tmp->m_data = x;
+			tmp->m_next = m_back->m_next;	//points tmp to front of queue
+			m_back->m_next = tmp;	//points back of queue to new element tmp
+			m_back = tmp;
+			m_size++;
+
+		- Dequeue
+			Node* tmp = m_back->m_next;	//tmp points to front of queue
+			m_back->m_next = tmp->m_next;
+			delete tmp;
+			m_size--;
+
+	}
+}
