@@ -168,6 +168,92 @@ Object Oriented Progamming
 
 			ex) class B : public A<int>		//B derived from A of type int, if you use T then derived class will be a template
 
+	Inheritance and Templates
+	{
+		ex)
+
+			template <typename T>
+			class Alpha
+			{
+				T x;
+			}
+
+			Alpha bob;	//Going to fail because Alpha is not a class, Alpha is a template to build classes
+
+			Alpha<int> fred; //Will work, Alpha<int> is a class
+
+			Alpha<string> romeo;	//works
+
+			Beta simon; //works (based on Beta class below)
+
+			Gamma<double> tony;	//works
+
+			Delta<bool, unsigned long long> oliver;
+
+			Gamma<Beta<int>> john;
+
+			- Alpha with a type paramter is a class, but not Alpha by itself
+
+				oliver
+			_____________
+			|	bool	|
+			|	[]		|
+			| u longlong|
+			|	[]		|
+			|___________|
+
+				john								x & y inside of john
+			_____________________				_____________
+			|	x				|				|	x []	|
+			|	[] beta<int>	|				|	y []	|
+			|	z 				|				|___________|
+			|	[] beta<int>	|					beta<int>
+			|___________________|
+
+			//cursed but works; array with array inside each element, with Alpha inside
+			ArrayList<ArrayList<Alpha<int>>> mark;
+
+		ex)
+
+			//This does not work because data type is not specified
+			class Beta: public Alpha
+			{
+				int y;
+				.
+				.
+				.
+			}
+
+			//This does work because type is specified
+			class Beta: public Alpha<char>
+			{
+				int y;
+				.
+				.
+				.
+			}
+
+		//Gamma is not a class, it is a template (Alpha is a template, Gamma is a derived template of Alpha)
+		template <typename T>
+		class Gamma: public Alpha<T>
+		{
+			T z;
+			.
+			.
+			.
+		}
+
+		//Two template paramters, one for base class and for the derived class
+		template <typename T, typename U>
+		class Delta: public Alpha<T>
+		{
+			U w;
+			.
+			.
+			.
+		}
+
+	}
 
 	Destructors under inheritance
 	{
