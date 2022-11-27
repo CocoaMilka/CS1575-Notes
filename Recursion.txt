@@ -1,0 +1,216 @@
+Recursion
+
+	- An object is said to be recursive if it partially consits or is defined in terms of itself
+
+	- Recursion is a powerful mean of mathematical definition
+
+	- Recursive definitions consists of two parts:
+
+		- Base Case: A statement that can be resolved directly
+		- Recursive Case: An object defined in terms of itself
+
+		ex) The set of all even numbers E
+
+			{2, 4, 6, 8, ... }	//Not precise enough!
+
+			- 2 ∈ E
+			- if n ∈ E, then so is n + 2	//Generates the set of all even integers
+
+	- We can use recursion to describe algorithms
+
+	- Recursive algorithms consits of 2 parts
+
+		- Base Case: How to solve directly, an instance of the problem
+		- Recursive Case:
+			- How to decompose the problem into simpler instances
+			- Given solutions to the simpler problems; How to compose a solution into the given instance
+
+			ex) The "Triomino" Problem: Given a chess board of size 2^n, where 1 cell has been removed, cover the remaining board with "Triominos"
+
+				Trimonio:
+
+					◻️
+					◻️◻️
+
+ 				n = 3:
+
+ 				◻️◻️◻️◻️◻️◻️◻️◻️
+ 				◻️◻️◻️◻️◻️◻️◻️◻️
+ 				◻️◻️◻️◻️◻️◻️◻️◻️
+ 				◻️◻️◻️◻️◻️◻️◻️◻️
+ 				◻️◻️◻️◻️◻️◻️◻️◻️
+ 				◻️◻️◻️◻️◻️◾️◻️◻️
+ 				◻️◻️◻️◻️◻️◻️◻️🔲	//Fill with trimonio
+ 				◻️◻️◻️◻️◻️◻️🔲🔲
+
+ 				Base Case: n = 1
+
+ 				◾️🔲	🔲◾️	🔲🔲	🔲🔲
+ 				🔲🔲	🔲🔲	🔲◾️	◾️🔲	//Each case can be solved individually
+
+ 				Now recursive Case: n = k
+
+ 				+----- 2^k -----+
+ 				|				|
+ 				|	2^(k-1)		|
+ 				|				|
+ 				_				|	2^k
+ 				|				|
+ 				|	2^(k-1)		|
+ 				+---------------+
+
+ 				//Divide board into 4 parts, solve each part individually
+
+ 				◻️◻️◻️◻️◻️◻️◻️◻️
+ 				◻️◻️◻️◻️◻️◻️◾️◻️
+ 				◻️◻️◻️◻️◻️◻️◻️◻️
+ 				◻️◻️◻️◾️◻️◻️◻️◻️
+ 				◻️◻️◻️◾️◾️◻️◻️◻️
+ 				◻️◻️◻️◻️◻️◻️◻️◻️	//Put fake holes into the middle
+ 				◻️◻️◻️◻️◻️◻️◻️🔲
+ 				◻️◻️◻️◻️◻️◻️🔲🔲
+
+ 				//Recursively split board until each split is of size n = 1 then solve individually
+
+ 	Recursive Program:
+
+ 		foo(x)
+ 		{
+ 			 if x is a base case
+	 			return direction solution to x
+	 		else
+	 			decompose x into smaller problem x'
+	 			foo(x')
+	 			construct solution for x from the solution to x'
+	 			return solution
+ 		}
+
+ 		- Recursion gets a bad rep
+
+ 			1) Bad examples
+
+ 				fibonacci:	fib(1) = 1
+ 							fib(2) = 1
+ 							fib(n) = fib(n - 1) + fib(n - 2)
+
+ 					//Recursive
+ 					int fibo(int n)
+ 					{
+ 						if (n ≤ 2)
+ 						{
+ 							return 1;
+ 						}
+ 						else
+ 						{
+ 							return fibo(n - 1) + fibo (n - 2);
+ 						}
+ 					}
+
+ 					//Iterative
+ 					int fibo(int n)
+ 					{
+ 						if (n ≤ 2) return 1;
+ 						int a = 1, b = 2;
+
+ 						for (int k = 2; k < n; k++)
+ 						{
+ 							a = a + b;
+ 							b = a - b;
+ 						}
+ 					}
+
+ 			2) Recursion and iteration are quivalent
+
+ 				- Everything you can do with recursion you can do with iteration
+
+ 				- Everything you can do with iteration you can do recursively
+
+
+ 			power(x, y) = x^y
+
+ 			int pow(int x, int y)
+ 			{
+ 				int r = 1;
+ 				for (int k = 0; k < y; k++)
+ 				{
+ 					r = r * x;
+ 				}
+ 				return r;
+ 			}
+ 			//multiply y times: O(n)
+
+ 			x^y recursively:	1: y = 0
+ 								x: y = 1
+ 								x^(y/2) * x^(y/2): y is even
+ 								x^(y/2) * x^(y/2) * x: y is odd
+
+ 			int pow(int x, int y)
+ 			{
+ 				if (y == 0) return 1;
+ 				if (y == 1) return x;
+
+ 				int r = pow(x, y/2);
+
+ 				if(y % 2 == 0)
+ 					return r * r;
+ 				else
+ 					return r * r * x;
+ 			}
+
+ 			pow(2, 4) -> pow(2, 2) -> pow(2, 1)
+
+ 							# of multiplications
+ 			pow(2, 17) 		2
+ 			-> pow(2, 8) 	1
+ 			-> pow(2, 4) 	1
+ 			-> pow(2, 2) 	1
+ 			-> pow(2, 1)	0
+
+ 			log_2(y) function calls
+ 			2 * log_2(y) multiplications
+ 			O(log_2(n))
+
+ 			Recursive power function is much more efficient
+
+ 	Recusrive Backtracking
+
+ 		- Many problems do not have a "fixed rule" solution
+
+ 		Strategy: Decompose problem into a sequence of trial-and-error tasks
+
+ 		Problem: The n-queens problem
+
+ 			- Given a chess board of size n x n place n queens in the board in such a way that the queens do not attack each other
+
+ 			Suppose n = 4
+
+ 				◻️◻️♛ ◻️
+ 				 ♛◻️◻️◻️
+ 				◻️◻️◻️♛
+ 				◻️ ♛◻️◻️
+
+ 				- No general rule
+
+ 				in 4x4 case: 16x15x14x13 = 43k possible combinations
+
+ 				One trick: One queen per row: 4x4x4x4 = 256
+
+ 				for 6x6 case you need to search 6^6 = 46k boards
+
+ 			- Place queens one at a time and stop when conflicts arise
+
+ 				try-queen(i)
+ 				{
+ 					repeat
+ 						place ith queen
+ 						if no more queens to place
+ 							success
+ 						else
+ 							try = try-queen(i+1)
+ 							if try = sucess
+ 								return success
+ 							else
+ 								retract queen
+ 					until out of places for ith queen
+ 					return fail
+ 				}

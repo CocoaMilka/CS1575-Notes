@@ -1,0 +1,369 @@
+Data Structure / Tree
+{
+
+	Definition:
+	{
+		- A collection of objects (of the same type) together with a hierarchical relationship between the objects
+
+		- A single element (node) is a tree
+		- if n is a node and T1, T3, T3, ... Tk are trees n related to T1, T2, ... Tk is a tree
+
+			n
+		/	|	\
+		T1  T...  Tk
+
+		- n is called the root and T1, ... Tk are called the subtrees
+
+		NOTE: Every tree has exactly one root
+
+		- The roots of each T1 ... Tk are called the children of n
+
+		- n is called the parent of the roots of T1, ... Tk
+
+		- Nodes with the same parent are called siblings
+
+		- Nodes with no children are called leaves
+
+		- The degree of a node n is the number of children of n
+
+		- The degree of a tree is the higest degree of a node in the tree
+
+		Path
+		{
+			- a path in a tree is a sequence of nodes <n0, n1, ... nk> where ni+1 is the parent of ni // in order towards the root, bottom to top
+
+			- The depth of a node n is the length of the path from n to the root
+
+				Note: The root is a depth 0
+
+				Note: There exists exactly one path from every node to the root
+
+			- The height of a tree is the length of the longest path of a node in the tree
+		}
+
+		Ancestor
+		{
+			- Given 2 nodes a and b, a is called the ancestor of b if there is a path from b to a
+
+			- b is called a descendant of a if there is a path from b to a
+		}
+	}
+
+	Applications:
+	{
+		- File systems:
+
+					c:
+				/	|	\
+			Docs  pics  apps
+			/ \		|		\
+		  hw  tax	sb 		games
+
+		- Expression trees:
+
+			3 * 7 + 8 * (9 + 12)
+
+					+
+				 /		\
+			    * 		 *
+			  /	 \	   /  \
+			  3	  7	  8	  +
+						/	\
+						9	12
+	}
+
+	Algorithmns
+	{
+		- Tree traversals:
+
+							(i)
+						/		  \
+					  (h)		  (g)
+				 /			\		\
+				(a) 		(b)		(e)
+		 /		 |		\ 		 /		\
+		(f)		(j)		(k)		(c)		(d)
+
+		pre-order: i h a f j k b g e c d
+
+		post-order:
+
+		- An algorithm to "squentialize a tree"
+
+		- Pre order (T)	// parent before the children
+			print root of T
+			for every subtree T' of T
+				pre_order(T')
+
+		- Post order (T) // children before the parents
+			for every subtree T' of T
+				post_order(T')
+			print root of T
+	}
+
+	Data Type: Binary Search Tree
+	{
+		- Binary: The tree is of degree 2
+
+		- Distinguish between left and right subtree
+
+		- The elements of the tree are comparable ex: a < b ?
+
+		- Search property
+
+			For every node n in the tree
+				- n is greater than every node in its left subtree
+				- n is lesser than every node in its right subtree
+				- Duplicate elements are not allowed
+
+						   (25)
+					/				\
+				  (11)              (32)
+			  /			\		  /		\
+			(5)		   (17)		(28)   (41)
+		  /			/		\			  \
+		(2)		(13)		(20)		  (42)
+
+		Operations:
+		{
+			find(x, T): bool
+			get min(T): element
+			get max(T): element
+			insert(x, T)
+			remove(x, T)
+
+			- Find requires as many comparisons as the height of the tree
+				- To store k nodes you need log2(k) levels
+				- if you have k nodes you need log2k comparisons
+
+			 Insert:
+
+			 	ex) insert 51, 67, 7, 68, 100, 37, 78, 89, 46, 75, 70, 32, 33
+
+			 	1) when tree is empty, only place to put element is in the root
+
+			 					   (51)
+							/				\
+						  (7)              (67)
+					  			\		  /		\
+							   (42)		(53)   (68)
+				  			/		\			  \
+						(37)		(46)	    (100)
+						/						/
+					  (32)					  (78)
+											/  		\
+										  (75) 		(89)
+										 /
+										(70)
+
+				Remove:
+
+					Case 1) The node to remove is a leaf
+
+						ex) removing 46 from example above (easy)
+
+					Case 2) The node to remove has one child
+
+						ex) 37 from example above (remove parent then put child under grandparent)
+
+					Case 3) The node to remove has 2 children
+
+						ex) 78 (easy)
+
+							Remove contents of 78
+
+							Promote value, then remove value
+
+						ex) remove 51 (hard)
+
+							promote min of the right subtree
+
+								or
+
+							the max of the left subtree
+
+							min/max of right/left subtree will only have one child
+
+		}
+
+		//Implementation
+		Data Structure: Tree Node
+		{
+			- Borrow node from linked list, but node has 2 pointers: 1 pointer to the left and one pointer to the right
+
+			- pointers will point to children, if no children then null
+
+			template <typename T>
+			class TreeNode
+			{
+				public:	// Cannot use in recursion if private
+					T m_data;
+					TreeNode* m_left;
+					TreeNode* m_right;
+			}
+
+			//independent function that is not a member of TreeNode
+			bool find(const T& x, const TreeNode* t)	// t is root
+			{
+				if (t == NULL) return false;
+
+				if (x == t->m_data) return true;
+
+				if (x > t->m_data)
+				{
+					return find(x, t->m_right);
+				}
+				else // x < t->m_data
+				{
+					return find(x, t->m_left);
+				}
+			}
+
+			//Independent function, basically all functions are independent
+
+			// Recursive edition
+			T getMin(TreeNode* t)	//Precondition: t is not an empty tree
+			{
+				if (t->m_left == NULL)
+				{
+					return t->m_data;
+				}
+				else
+				{
+					return getMin(t->m_left);
+				}
+			}
+
+			// Iterative edition
+			T getMax(TreeNode* t)
+			{
+				TreeNode* p = t;
+				while(p->m_right != NULL)
+				{
+					p = p->m_right;
+				}
+
+				return p->m_data;
+			}
+
+			//Pass TreeNode* pointer by reference, so you can directly modify the tree list
+			void insert(TreeNode*& t, T& x)
+			{
+				if (t == NULL)
+				{
+					t = new TreeNode;
+					t->m_data = x;
+					t->m_left = NULL;
+					t->m_right = NULL;
+				}
+				else if (x < t->m_data)
+				{
+					insert(t->m_left, x);
+				}
+				else if (x > t->m_data)
+				{
+					insert(t->m_right, x);
+				}
+				else //x == t->m_data
+				{
+					// Do nothing because trees cannot contain duplicates
+					return;
+				}
+			}
+
+			void remove(TreeNode*& t, T& x)
+			{
+				if (t == NULL)
+				{
+					return;
+				}
+				if (x < t->m_data)
+				{
+					remove(t->m_left, x);
+				}
+				else if (x > t->m_data)
+				{
+					remove(t->m_right, x);
+				}
+				else //x == t->m_data
+				{
+					// 4 possible cases: element to remove has 0 children, 1 left child, 1 right child, 2 children
+					if (t->m_left == NULL && t->m_right == NULL)
+					{
+						delete t;
+						t = NULL;
+					}
+					// Combine left and right single child cases, x has one child
+					else if (t->m_left == NULL || t->m_right == NULL)
+					{
+						//Will point to NULL if child doesn't exist
+						TreeNode* child = t->m_left;
+						if (child == NULL)
+						{
+							//So child must be on other side
+							child = t->m_right;
+						}
+
+						delete t;
+						t = child;
+					}
+					// x has two children
+					else
+					{
+						t->m_data = getMax(t->m_left);
+						remove(t->m_left, t->m_data);
+					}
+				}
+			}
+		}
+
+		Tree function complexity
+		{
+			average height of trees are log base 2 of n
+
+			Complexity:
+			find()		O(logn)
+			insert()	O(logn)
+			remove()	O(logn)
+		}
+
+		Converting tree to array
+		{
+			Use each level of tree as index in array
+
+							(10)
+					/					\
+				  (7)              		(21)
+			    /	 \		      	  /		\
+			  (2)	 (9)			(12)   (27)
+			  				.
+			  				.
+			  				.
+			  		too lazy to finish tree
+
+
+			{10, 7, 21, 2, 9, 12, 27, 1, 4, -, -, -, 15, 23, 32, -, -, -, 5}
+
+			if a node is at index i:, where are children?: left(i) = 2i + 1 	right(i) = 2i + 2
+
+			parent of i: (i - 1) / 2
+
+			pros of array: Arrays are easy and you can go up/down the tree
+			cons: consumes more memeory
+
+		}
+
+		Homework deets:
+
+			AbstractQueue.h
+
+			MyQueue.h
+
+			MyQueue.hpp
+
+			popplers.cpp
+
+			tester.cpp
+	}
+
+}
