@@ -1,0 +1,196 @@
+C++ Exception Handling
+{
+	- A feature to handle errors
+
+	idea: separate normal code from error handling code
+
+	ex)
+
+		int foo (int n)
+		{
+			.
+			.
+			.
+			x = y / n;	// Will crash if n = 0
+			.
+			.
+			.
+		}
+
+		// Guarded
+		// Works but now error handling code is mixed with normal code
+		int foo (int n)
+		{
+			.
+			.
+			.
+			if (n != 0)
+			{
+				x = y / n;
+			}
+			else
+			{
+				error();
+			}
+			.
+			.
+			.
+		}
+
+	try, catch, throw
+	{
+		try {...}
+
+			- Defines a block where an error can occur
+
+		catch() {...}
+
+			- Defines an error handling code block
+
+		throw var
+
+			- interrupts execution, attempts to find error handling code
+	}
+
+	Rewrite example 1 with exception handling:
+
+		// Now error handling code is pushed to the bottom instead of mixed with normal code
+		int foo (int n)
+		{
+			try
+			{
+				.
+				.
+				.
+				if (n == 0) throw n
+				x = y / n;
+				.
+				.
+				.
+			}
+			catch (int x)
+			{
+				error();
+				.
+				.
+				.
+			}
+		}
+
+	Multiple throw ... catch are possible
+
+		int bar (...)
+		{
+			 try
+			 {
+			 	.
+			 	.
+			 	.
+			 	if (...) throw 3
+			 	.
+			 	.
+			 	if (...) throw string("error")
+			 	.
+			 	.
+			 	if (...) throw Pig();
+			 	.
+			 	.
+			 	.
+			 }
+		}
+
+		catch(int x)	// will catch 3
+		 {
+		 	.
+		 	.
+		 	.
+		 }
+
+		 catch(string s)	// will catch string "error"
+		 {
+		 	.
+		 	.
+		 	.
+		 }
+
+		 catch(FarmAnimal a)	// will catch pig; also base class can catch a derived class
+		 {
+		 	.
+		 	.
+		 	.
+		 }
+
+		 catch (...)	// catch all, will catch everything
+		 {
+		 	.
+		 	.
+		 	.
+		 }
+
+
+	Two styles
+
+		- self managed errors	// throw and catch are defined in same function
+
+		- caller managed errors	// throw and catch are defined in different functions (they don't handle their own errors, makes caller handle errors)
+
+				int main()
+				{
+					try
+					{
+						.
+						.
+						.
+						cin >> n;
+						foo(n);
+						.
+						.
+						.
+					}
+					catch(int n)
+					{
+						error();
+						.
+						.
+						.
+					}
+				}
+
+				int foo(int n)
+				{
+					.
+					.
+					.
+					if (n == 0) throw n;
+					x = y / n;
+					.
+					.
+					.
+				}
+
+	class Oops
+	{
+		.
+		.
+		.
+	}
+
+	#include <stdexcept>	// Collection of classes for you to throw
+
+		Logic-error
+
+			- invalid-argument
+			- domain-error
+			- length-error
+			- out-of-range-error
+
+		runtime-error
+
+			- range-error
+			- underflow-error
+			- overflow-error
+
+	// In homework, use caller managed errors
+	// if () throw Oops("error");
+}
+
