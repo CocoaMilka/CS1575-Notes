@@ -1,0 +1,102 @@
+Abstract Data Type / Heap
+
+Heap
+{
+	- A binary Tree
+	- All but the last level is full
+	- The last level is used from left to right
+	- For any element x, x is smaller than all its descendants
+
+
+	Operations:
+	{
+		- insert(x, t)		O(log n)	//base 2
+		- getMin(t)			O(1)
+		- removeMin(t)		O(log n)
+	}
+
+	Data Structure: Array Heap
+	{
+		// Since heap has no gaps in tree, can be stored in array
+
+		[	data [.]	]	-> [5][10][7][12][13][15][][]
+		[	size [6]	]
+		[	max  [8]	]
+
+		template <typename T>
+		class minHeap
+		{
+			T* m_Data;
+			int m_max;
+			int m_Size;
+		}
+
+		// Operations
+
+
+		T getMin()
+		{
+			if (m_size == 0)
+			{
+				throw tantrum();
+			}
+			else
+			{
+				return m_data[0];
+			}
+		}
+
+
+		void insert(T& x)
+		{
+			int hole = m_size;
+			int par = (hole -1) / 2;	// Parent of hole
+
+			while (hole > 0 && x < m_data[pr])
+			{
+				m_data[hole] = m_data[par];
+				hole = par;
+				par = (hole - 1) / 2;
+			}
+
+			m_data[hole] = x;
+			m_size++;
+		}
+
+		void removeMin()
+		{
+			int tmp = m_data[m_size - 1];	//Bottom right most element of tree (will be brought to tree root and trickle down)
+			m_size--;
+			int hole = 0;
+
+			//Compare children of the hole with tmp to decide which child to promote
+			bool done = false;
+			while (hole * 2 + 1 < m_size && !done)	//While the hole has children and you are not done
+			{
+				int promo = hole * 2 + 1;
+				if (promo + 1 < m_size && m_data[promo + 1] < m_data[promo])
+				{
+					promo = promo + 1;
+				}
+				if (m_data[promo] < tmp)
+				{
+					m_data[hole] = m_data[promo];
+					hole = promo;
+				}
+				else
+				{
+					done = true;
+				}
+			}
+			m_data[hole] = tmp;
+		}
+
+
+	}
+
+	Let t be a binary tree:
+
+		- We say t is full if every node except leaves have two children
+
+		- We say t is complete if every level except the last one has every possible node
+}
