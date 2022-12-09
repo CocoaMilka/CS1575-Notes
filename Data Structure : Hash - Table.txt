@@ -1,0 +1,46 @@
+Data Structure : Hash - Table (Python Dictionary)
+{
+	ArrayList<LinkedList<T>>
+
+	- An unordered collection of objects
+
+	- An array list filled with linked lists
+
+	- Operations
+
+		- insert(x)
+
+		- remove(x)
+
+		- find(x)
+
+	- Goal: Make all 3 operations fast disregarding memoery use
+
+	Ex)
+
+		Unordered colelction of students
+
+		Students have 8 digit long IDs
+
+		Create an array containing 0 to 99999999
+
+		[0][][][12439727][12534727][.][.][.][][99999999]	// List contains many null pointers which take up space
+					|		|
+					v		v
+					[Karl]		[Bob]
+
+		Instead go from 0 to 999
+
+		organize by last digit
+
+		[0][][727][][999]
+				|
+				v
+				[Bob]
+				|
+				v
+				[Karl]
+}
+
+
+
